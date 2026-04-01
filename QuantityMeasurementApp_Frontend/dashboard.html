@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!--  TOPBAR -->
+<div class="topbar">
+  <h3 class="title">Quantity Measurement</h3>
+  <button class="logout-btn" onclick="logout()">Logout</button>
+</div>
+<!--  MAIN CARD -->
+<div class="dashboard-center">
+  <div class="card">
+
+    <!-- QUANTITY -->
+    <div class="tabs" id="quantityTabs">
+      <div class="tab active" onclick="selectQuantity('length', this)">Length</div>
+      <div class="tab" onclick="selectQuantity('weight', this)">Weight</div>
+      <div class="tab" onclick="selectQuantity('volume', this)">Volume</div>
+      <div class="tab" onclick="selectQuantity('temperature', this)">Temperature</div>
+    </div>
+
+    <!-- OPERATIONS -->
+    <div class="tabs" id="operationTabs">
+      <div class="tab active" onclick="selectOperation('add', this)">Add</div>
+      <div class="tab" onclick="selectOperation('subtract', this)">Subtract</div>
+      <div class="tab" onclick="selectOperation('divide', this)">Divide</div>
+      <div class="tab" onclick="selectOperation('compare', this)">Compare</div>
+      <div class="tab" onclick="selectOperation('convert', this)">Convert</div>
+    </div>
+
+    <!-- INPUTS -->
+    <div class="row">
+      <input id="value1" class="small-input" placeholder="Value 1">
+      <select id="unit1" class="small-select"></select>
+
+      <input id="value2" class="small-input" placeholder="Value 2">
+      <select id="unit2" class="small-select"></select>
+    </div>
+
+    <!-- CALCULATE -->
+    <button class="calculate-btn" onclick="calculate()">Calculate</button>
+
+    <!-- RESULT -->
+    <div id="result" class="result"></div>
+
+    <!-- HISTORY -->
+     <h4>History</h4> 
+<table id="history">
+  <thead>
+    <tr>
+      <th>Value 1</th>
+      <th>Unit 1</th>
+      <th>Operation</th>
+      <th>Value 2</th>
+      <th>Unit 2</th>
+      <th>Result</th>
+      <th>Type</th>
+      <th>CreatedAt</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- History rows will be appended here -->
+  </tbody>
+</table>
+   
+
+  </div>
+</div>
+
+<script src="api.js"></script>
+<script src="dashboard.js"></script>
+</body>
+</html>

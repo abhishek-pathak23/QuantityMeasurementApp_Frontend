@@ -1,0 +1,421 @@
+/* body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f4f8fb;
+}
+
+.container {
+  width: 350px;
+  margin: 80px auto;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h2 {
+  text-align: center;
+  color: #007bff;
+}
+
+input, select, button {
+  width: 100%;
+  margin: 8px 0;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+button {
+  background: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0056b3;
+}
+
+.link {
+  text-align: center;
+  margin-top: 10px;
+}
+
+
+.topbar {
+  position: relative;
+  background: #007bff;
+  color: white;
+  padding: 14px 20px;
+}
+
+
+.topbar .title {
+  text-align: center;
+  margin: 0;
+}
+
+
+.logout-btn {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  
+  width: auto !important;   
+  padding: 5px 12px !important;
+  
+  background: white;
+  color: #007bff;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+
+.topbar h3 {
+  margin: 0;
+}
+
+.logout-btn {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  background: white;
+  color: #007bff;
+  padding: 5px 12px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+
+.dashboard-center {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.card {
+  width: 750px;
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(0,0,0,0.1);
+}
+
+
+.tabs {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.tab {
+  flex: 1;
+  padding: 8px;
+  text-align: center;
+  border: 1px solid #007bff;
+  cursor: pointer;
+  color: #007bff;
+  margin-right: 5px;
+  border-radius: 5px;
+  font-size: 13px;
+}
+
+.tab.active {
+  background: #007bff;
+  color: white;
+}
+
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.small-input {
+  width: 90px;
+  padding: 6px;
+}
+
+.small-select {
+  width: 110px;
+  padding: 6px;
+}
+
+.calculate-btn {
+  width: 100%;
+  margin-top: 15px;
+  padding: 10px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.result {
+  text-align: center;
+  margin-top: 15px;
+  font-weight: bold;
+  color: #007bff;
+}
+
+
+
+#history {
+  list-style: none;           
+  padding: 0;
+  margin: 0;
+  max-height: 250px;         
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+}
+
+#history li {
+  padding: 10px 15px;
+  margin: 5px 10px;
+  background-color: #ffffff;
+  border-left: 4px solid #4CAF50;  
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  font-size: 14px;
+  color: #333;
+  transition: all 0.2s ease-in-out;
+}
+
+
+#history {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+#history th, #history td {
+  border: 1px solid #ddd;
+  padding: 8px 12px;
+  text-align: center;
+  font-size: 14px;
+}
+
+#history th {
+  background-color: #4CAF50;
+  color: white;
+  font-weight: 600;
+}
+
+#history tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+#history tbody tr:hover {
+  background-color: #e6f7ff;
+  cursor: default;
+}
+
+#history td {
+  color: #333;
+} 
+  */
+
+
+  /* 🔷 RESET + GLOBAL */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #f5f7fa;
+  color: #333;
+}
+
+/* 🔷 CONTAINER (Login / Register) */
+.container {
+  width: 360px;
+  margin: 80px auto;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* 🔷 HEADINGS */
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: 600;
+  color: #222;
+}
+
+/* 🔷 FORM ELEMENTS */
+input,
+select {
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  outline: none;
+  transition: border 0.2s;
+}
+
+input:focus,
+select:focus {
+  border-color: #4a90e2;
+}
+
+/* 🔷 BUTTON */
+button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  background: #4a90e2;
+  color: #ffffff;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+button:hover {
+  background: #357abd;
+}
+
+/* 🔷 DASHBOARD CARD */
+.card {
+  width: 750px;
+  margin: 40px auto;
+  padding: 25px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* 🔷 TOP BAR */
+.topbar {
+  position: relative;
+  background: #ffffff;
+  border-bottom: 1px solid #eaeaea;
+  padding: 15px 20px;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.topbar-title {
+  text-align: center;
+}
+
+/* 🔷 TABS CONTAINER (if flex used) */
+.tabs {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+/* 🔷 TABS */
+.tab {
+  flex: 1;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  color: #555;
+  margin-right: 5px;
+  border-radius: 6px;
+  background: #f0f2f5;
+  transition: background 0.2s;
+}
+
+.tab:last-child {
+  margin-right: 0;
+}
+
+.tab:hover {
+  background: #e4e7eb;
+}
+
+.tab.active {
+  background: #4a90e2;
+  color: #ffffff;
+}
+
+/* 🔷 RESULT TEXT */
+.result {
+  text-align: center;
+  margin-top: 15px;
+  font-weight: 600;
+  color: #4a90e2;
+  font-size: 16px;
+}
+
+/* 🔷 HISTORY TABLE */
+#history {
+  width: 100%;
+  margin-top: 20px;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+#history th {
+  background: #f0f2f5;
+  color: #333;
+  padding: 10px;
+  font-weight: 600;
+}
+
+#history td {
+  padding: 10px;
+  border-top: 1px solid #eee;
+  text-align: center;
+}
+
+/* 🔷 LOGOUT BUTTON */
+.logout-btn {
+  position: absolute;
+  right: 20px;
+  top: 12px;
+
+  background: #e74c3c;
+  color: white;
+  border-radius: 5px;
+  padding: 6px 12px;
+  cursor: pointer;
+  border: none;
+  font-size: 14px;
+  width: auto;
+}
+
+.logout-btn:hover {
+  background: #c0392b;
+}
+
+/* 🔷 LINKS (if any like register/login switch) */
+a {
+  color: #4a90e2;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* 🔷 RESPONSIVE */
+@media (max-width: 768px) {
+  .container,
+  .card {
+    width: 90%;
+  }
+}
