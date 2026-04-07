@@ -1,4 +1,4 @@
- const BASE_URL = "http://localhost:5263/api";
+const BASE_URL = "http://localhost:5263/api";
 
 async function login() {
   const email = document.getElementById("email").value.trim();
@@ -8,7 +8,7 @@ async function login() {
   errorEl.innerText = "";
 
   try {
-    const res = await fetch(BASE_URL+"/Auth/login", {
+    const res = await fetch(BASE_URL + "/Auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -49,20 +49,24 @@ async function login() {
 }
 
 async function signup() {
-  const name=document.getElementById("name").value;
+  const name = document.getElementById("name").value;
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
-  const res=await fetch(BASE_URL + "/Auth/signup", {
+  const res = await fetch(BASE_URL + "/Auth/signup", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name,email, password })
+    body: JSON.stringify({ name, email, password })
   });
-if(res.ok){
-  alert("Signup successful");
-  window.location.href = "login.html";}
-  else{
-    alert("user already exists");
+  if (res.ok) {
+    alert("Signup successful");
+    window.location.href = "login.html";
   }
-
+  else {
+    if(res.status=== 400){
+    alert("Email already exists");}
+    else{
+      alert("Signup error");
+    }
+  }
 }
