@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: quantity-measurement-frontend
+    env: static
+    buildCommand: "npm install --production=false && npm run build --configuration development"
+    staticPublishPath: dist/quantity-measurement-app/browser
+    routes:
+      - type: rewrite
+        source: /(.*) 
+        destination: /index.html
+    envVars:
+      - key: NODE_VERSION
+        value: 18
+      - key: NODE_OPTIONS
+        value: "--max-old-space-size=1536"

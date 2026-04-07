@@ -1,0 +1,269 @@
+<div class="dashboard">
+  <div class="dashboard-simple">
+    <!-- Header -->
+    <div class="simple-header">
+      <h1>Quantity Measurement</h1>
+      <div class="user-info" *ngIf="!isGuest">
+        <span class="badge auth">Authenticated</span>
+        <button class="btn-logout" (click)="logout()">Logout</button>
+      </div>
+      <div class="user-info" *ngIf="isGuest">
+        <span class="badge guest">Guest</span>
+        <div class="guest-dropdown" *ngIf="showGuestMenu">
+          <button (click)="goToLogin()">Login</button>
+          <button (click)="goToSignup()">Sign Up</button>
+        </div>
+        <button class="btn-logout" (click)="toggleGuestMenu()">Menu ▼</button>
+      </div>
+    </div>
+
+    <!-- Operation Buttons -->
+    <div class="op-buttons">
+      <button class="btn-action" [class.active]="activeTab === 'convert'" (click)="setTab('convert')">Convert</button>
+      <button class="btn-action" [class.active]="activeTab === 'compare'" (click)="setTab('compare')">Compare</button>
+      <button class="btn-action" [class.active]="activeTab === 'add'" (click)="setTab('add')">Add</button>
+      <button class="btn-action" [class.active]="activeTab === 'subtract'" (click)="setTab('subtract')">Subtract</button>
+      <button class="btn-action" [class.active]="activeTab === 'divide'" (click)="setTab('divide')">Divide</button>
+      <button class="btn-action" [class.active]="activeTab === 'history'" (click)="setTab('history')">History</button>
+    </div>
+
+    <!-- Active Panel -->
+    <div class="active-panel">
+      <!-- Convert -->
+      <div *ngIf="activeTab === 'convert'">
+        <h2>Convert Units</h2>
+        <div class="form-row">
+          <div class="input-group">
+            <label>Value</label>
+            <input type="number" [(ngModel)]="convertValue" placeholder="Enter value" />
+          </div>
+          <div class="input-group">
+            <label>From</label>
+            <select [(ngModel)]="convertFromCategory" (change)="onConvertFromCategoryChange()">
+              <option value="length">Length</option>
+              <option value="weight">Weight</option>
+              <option value="volume">Volume</option>
+              <option value="temperature">Temperature</option>
+            </select>
+            <select [(ngModel)]="convertFrom">
+              <option *ngFor="let unit of unitCategories[convertFromCategory]" [value]="unit">{{ unit }}</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label>To</label>
+            <select [(ngModel)]="convertToCategory" (change)="onConvertToCategoryChange()">
+              <option value="length">Length</option>
+              <option value="weight">Weight</option>
+              <option value="volume">Volume</option>
+              <option value="temperature">Temperature</option>
+            </select>
+            <select [(ngModel)]="convertTo">
+              <option *ngFor="let unit of unitCategories[convertToCategory]" [value]="unit">{{ unit }}</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn-action" (click)="onConvert()" [disabled]="loading">{{ loading ? 'Converting...' : 'Convert Now' }}</button>
+        <div *ngIf="convertError" class="error-msg">
+          {{ convertError }}
+          <button *ngIf="convertErrorType === 'auth'" class="btn-login-again" (click)="logout()">Login Again</button>
+        </div>
+        <div *ngIf="convertResult" class="result-box">
+          <div><strong>Result:</strong> {{ convertResult.convertedValue || convertResult.value || convertResult.result || convertResult.Value || convertResult.Result }} {{ convertResult.targetUnit || convertResult.unit || convertResult.Unit }}</div>
+          <div *ngIf="!convertResult.convertedValue && !convertResult.value && !convertResult.result"><pre>{{ convertResult | json }}</pre></div>
+        </div>
+      </div>
+
+      <!-- Compare -->
+      <div *ngIf="activeTab === 'compare'">
+        <h2>Compare Quantities</h2>
+        <div class="dual-input">
+          <div class="input-block">
+            <h4>First Quantity</h4>
+            <input type="number" [(ngModel)]="compareValue1" placeholder="Value" />
+            <select [(ngModel)]="compareUnit1Category" (change)="onCompareUnit1CategoryChange()">
+              <option value="length">Length</option>
+              <option value="weight">Weight</option>
+              <option value="volume">Volume</option>
+              <option value="temperature">Temperature</option>
+            </select>
+            <select [(ngModel)]="compareUnit1">
+              <option *ngFor="let unit of unitCategories[compareUnit1Category]" [value]="unit">{{ unit }}</option>
+            </select>
+          </div>
+          <div class="vs">VS</div>
+          <div class="input-block">
+            <h4>Second Quantity</h4>
+            <input type="number" [(ngModel)]="compareValue2" placeholder="Value" />
+            <select [(ngModel)]="compareUnit2Category" (change)="onCompareUnit2CategoryChange()">
+              <option value="length">Length</option>
+              <option value="weight">Weight</option>
+              <option value="volume">Volume</option>
+              <option value="temperature">Temperature</option>
+            </select>
+            <select [(ngModel)]="compareUnit2">
+              <option *ngFor="let unit of unitCategories[compareUnit2Category]" [value]="unit">{{ unit }}</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn-action" (click)="onCompare()" [disabled]="loading">{{ loading ? 'Comparing...' : 'Compare Now' }}</button>
+        <div *ngIf="compareError" class="error-msg">{{ compareError }}</div>
+        <div *ngIf="compareResult" class="result-box">
+          <div><strong>Comparison:</strong> {{ compareResult.comparison || compareResult.result || compareResult.Result }}</div>
+          <div *ngIf="!compareResult.comparison && !compareResult.result"><pre>{{ compareResult | json }}</pre></div>
+        </div>
+      </div>
+
+      <!-- Add -->
+      <div *ngIf="activeTab === 'add'">
+        <h2>Add Quantities</h2>
+        <div class="dual-input">
+          <div class="input-block">
+            <h4>First Quantity</h4>
+            <input type="number" [(ngModel)]="addValue1" placeholder="Value" />
+            <select [(ngModel)]="addUnit1Category" (change)="onAddUnit1CategoryChange()">
+              <option value="length">Length</option>
+              <option value="weight">Weight</option>
+              <option value="volume">Volume</option>
+              <option value="temperature">Temperature</option>
+            </select>
+            <select [(ngModel)]="addUnit1">
+              <option *ngFor="let unit of unitCategories[addUnit1Category]" [value]="unit">{{ unit }}</option>
+            </select>
+          </div>
+          <div class="vs">+</div>
+          <div class="input-block">
+            <h4>Second Quantity</h4>
+            <input type="number" [(ngModel)]="addValue2" placeholder="Value" />
+            <select [(ngModel)]="addUnit2Category" (change)="onAddUnit2CategoryChange()">
+              <option value="length">Length</option>
+              <option value="weight">Weight</option>
+              <option value="volume">Volume</option>
+              <option value="temperature">Temperature</option>
+            </select>
+            <select [(ngModel)]="addUnit2">
+              <option *ngFor="let unit of unitCategories[addUnit2Category]" [value]="unit">{{ unit }}</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn-action" (click)="onAdd()" [disabled]="loading">{{ loading ? 'Adding...' : 'Add Now' }}</button>
+        <div *ngIf="addError" class="error-msg">{{ addError }}</div>
+        <div *ngIf="addResult" class="result-box">
+          <div><strong>Sum:</strong> {{ addResult.addedValue || addResult.result || addResult.value || addResult.Result }} {{ addResult.resultUnit || addResult.unit || addResult.Unit }}</div>
+          <div *ngIf="!addResult.addedValue && !addResult.result && !addResult.value && !addResult.Result"><pre>{{ addResult | json }}</pre></div>
+        </div>
+      </div>
+
+      <!-- Subtract -->
+      <div *ngIf="activeTab === 'subtract'">
+        <h2>Subtract Quantities</h2>
+        <div class="dual-input">
+          <div class="input-block">
+            <h4>First Quantity</h4>
+            <input type="number" [(ngModel)]="subtractValue1" placeholder="Value" />
+            <select [(ngModel)]="subtractUnit1Category" (change)="onSubtractUnit1CategoryChange()">
+              <option value="length">Length</option>
+              <option value="weight">Weight</option>
+              <option value="volume">Volume</option>
+              <option value="temperature">Temperature</option>
+            </select>
+            <select [(ngModel)]="subtractUnit1">
+              <option *ngFor="let unit of unitCategories[subtractUnit1Category]" [value]="unit">{{ unit }}</option>
+            </select>
+          </div>
+          <div class="vs">-</div>
+          <div class="input-block">
+            <h4>Second Quantity</h4>
+            <input type="number" [(ngModel)]="subtractValue2" placeholder="Value" />
+            <select [(ngModel)]="subtractUnit2Category" (change)="onSubtractUnit2CategoryChange()">
+              <option value="length">Length</option>
+              <option value="weight">Weight</option>
+              <option value="volume">Volume</option>
+              <option value="temperature">Temperature</option>
+            </select>
+            <select [(ngModel)]="subtractUnit2">
+              <option *ngFor="let unit of unitCategories[subtractUnit2Category]" [value]="unit">{{ unit }}</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn-action" (click)="onSubtract()" [disabled]="loading">{{ loading ? 'Subtracting...' : 'Subtract Now' }}</button>
+        <div *ngIf="subtractError" class="error-msg">{{ subtractError }}</div>
+        <div *ngIf="subtractResult" class="result-box">
+          <div><strong>Difference:</strong> {{ subtractResult.subtractedValue || subtractResult.value || subtractResult.result || subtractResult.Value || subtractResult.Result }} {{ subtractResult.resultUnit || subtractResult.unit || subtractResult.Unit }}</div>
+          <div *ngIf="!subtractResult.subtractedValue && !subtractResult.value && !subtractResult.result"><pre>{{ subtractResult | json }}</pre></div>
+        </div>
+      </div>
+
+      <!-- Divide -->
+      <div *ngIf="activeTab === 'divide'">
+        <h2>Divide Quantities</h2>
+        <div class="dual-input">
+          <div class="input-block">
+            <h4>First Quantity</h4>
+            <input type="number" [(ngModel)]="divideValue1" placeholder="Value" />
+            <select [(ngModel)]="divideUnit1Category" (change)="onDivideUnit1CategoryChange()">
+              <option value="length">Length</option>
+              <option value="weight">Weight</option>
+              <option value="volume">Volume</option>
+              <option value="temperature">Temperature</option>
+            </select>
+            <select [(ngModel)]="divideUnit1">
+              <option *ngFor="let unit of unitCategories[divideUnit1Category]" [value]="unit">{{ unit }}</option>
+            </select>
+          </div>
+          <div class="vs">÷</div>
+          <div class="input-block">
+            <h4>Second Quantity</h4>
+            <input type="number" [(ngModel)]="divideValue2" placeholder="Value" />
+            <select [(ngModel)]="divideUnit2Category" (change)="onDivideUnit2CategoryChange()">
+              <option value="length">Length</option>
+              <option value="weight">Weight</option>
+              <option value="volume">Volume</option>
+              <option value="temperature">Temperature</option>
+            </select>
+            <select [(ngModel)]="divideUnit2">
+              <option *ngFor="let unit of unitCategories[divideUnit2Category]" [value]="unit">{{ unit }}</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn-action" (click)="onDivide()" [disabled]="loading">{{ loading ? 'Dividing...' : 'Divide Now' }}</button>
+        <div *ngIf="divideError" class="error-msg">{{ divideError }}</div>
+        <div *ngIf="divideResult" class="result-box">
+          <div><strong>Quotient:</strong> {{ divideResult.dividedValue || divideResult.value || divideResult.result || divideResult.Value || divideResult.Result }} {{ divideResult.resultUnit || divideResult.unit || divideResult.Unit }}</div>
+          <div *ngIf="!divideResult.dividedValue && !divideResult.value && !divideResult.result"><pre>{{ divideResult | json }}</pre></div>
+        </div>
+      </div>
+
+      <!-- History -->
+      <div *ngIf="activeTab === 'history'">
+        <h2>Operation History</h2>
+        <div class="history-tabs">
+          <button [class.active]="historyView === 'all'" (click)="switchHistory('all')">All History</button>
+          <button [class.active]="historyView === 'errored'" (click)="switchHistory('errored')">Error History</button>
+        </div>
+        <div *ngIf="historyLoading" class="loading">Loading history...</div>
+        <div *ngIf="!historyLoading && history.length === 0" class="empty">No history available</div>
+        <div class="history-list" *ngIf="!historyLoading && history.length > 0">
+          <div class="history-entry" *ngFor="let entry of history">
+            <span>{{ entry.timestamp || entry.Timestamp || entry.createdAt || entry.CreatedAt | date:'short' }}</span> - {{ entry.operationType || entry.OperationType || entry.operation || entry.Operation || entry.type || entry.Type }}: {{ entry.details || entry.Details || entry.description || entry.Description || entry.message || entry.Message }}
+            <div *ngIf="!entry.timestamp && !entry.Timestamp && !entry.createdAt && !entry.CreatedAt && !entry.operationType && !entry.OperationType && !entry.operation && !entry.Operation && !entry.type && !entry.Type" class="debug-info">
+              <small>Raw data: {{ entry | json }}</small>
+            </div>
+          </div>
+        </div>
+        <div class="history-list error" *ngIf="!historyLoading && erroredHistory.length > 0 && historyView === 'errored'">
+          <div class="history-entry" *ngFor="let entry of erroredHistory">
+            <span>{{ entry.timestamp || entry.Timestamp || entry.createdAt || entry.CreatedAt | date:'short' }}</span> - {{ entry.operationType || entry.OperationType || entry.operation || entry.Operation || entry.type || entry.Type }}: {{ entry.details || entry.Details || entry.description || entry.Description || entry.message || entry.Message }}
+            <div *ngIf="!entry.timestamp && !entry.Timestamp && !entry.createdAt && !entry.CreatedAt && !entry.operationType && !entry.OperationType && !entry.operation && !entry.Operation && !entry.type && !entry.Type" class="debug-info">
+              <small>Raw data: {{ entry | json }}</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Guest Notice -->
+    <div class="guest-notice" *ngIf="isGuest">
+      <p>You're using guest mode. Your operations won't be saved to history.</p>
+    </div>
+  </div>
+</div>
