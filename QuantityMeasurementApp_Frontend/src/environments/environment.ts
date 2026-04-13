@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl: 'https://quantitymeasurementapp-aa6n.onrender.com'
+  apiUrl: 'http://localhost:5263/api'
 };
