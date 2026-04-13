@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { forkJoin, of } from 'rxjs';
 import { catchError, timeout } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class ApiTestService {
@@ -11,12 +12,12 @@ export class ApiTestService {
     console.log('🧪 Testing backend endpoints...');
     
     const endpoints = [
-      '/api/Auth/signup',
-      '/api/auth/signup',
-      '/api/authentication/signup',
-      '/api/account/signup',
-      '/api/Auth/register',
-      '/api/auth/register',
+      environment.apiUrl + '/Auth/signup',
+      environment.apiUrl + '/auth/signup',
+      environment.apiUrl + '/authentication/signup',
+      environment.apiUrl + '/account/signup',
+      environment.apiUrl + '/Auth/register',
+      environment.apiUrl + '/auth/register',
     ];
 
     const results = await Promise.all(
@@ -42,7 +43,7 @@ export class ApiTestService {
 
   async testBackendConnectivity() {
     try {
-      const response = await this.http.get('/api/Auth/login', {
+      const response = await this.http.get(environment.apiUrl + '/Auth/login', {
         responseType: 'text'
       }).pipe(
         timeout(2000),

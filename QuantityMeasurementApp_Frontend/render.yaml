@@ -2,7 +2,7 @@ services:
   - type: web
     name: quantity-measurement-frontend
     env: static
-    buildCommand: "npm install --production=false && npm run build --configuration development"
+    buildCommand: "npm install --production=false && npm run build --configuration production"
     staticPublishPath: dist/quantity-measurement-app/browser
     routes:
       - type: rewrite
@@ -13,3 +13,5 @@ services:
         value: 18
       - key: NODE_OPTIONS
         value: "--max-old-space-size=1536"
+      - key: API_BASE_URL
+        value: "https://your-backend-service.onrender.com"
