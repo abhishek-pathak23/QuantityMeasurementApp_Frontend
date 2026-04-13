@@ -1,6 +1,6 @@
 {
   "/api/**": {
-    "target": "http://localhost:5263",
+    "target": "https://quantitymeasurementapp-aa6n.onrender.com",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug",
