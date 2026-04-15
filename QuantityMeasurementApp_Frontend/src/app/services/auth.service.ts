@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { BehaviorSubject, tap } from 'rxjs';
+import { BehaviorSubject, map, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
@@ -42,63 +42,38 @@ export class AuthService {
     return this.http.post<any>(`${this.BASE}/login`, data).pipe(
       tap(res => {
         console.log('✅ Login success - Full response:', JSON.stringify(res));
-        console.log('Response type:', typeof res);
-        console.log('Response keys:', Object.keys(res));
-        
+      }),
+      map(res => {
         // Try multiple possible token locations
-        let token = null;
-        
-        // Check common field names
-        token = res.token || res.Token || res.accessToken || res.AccessToken || res.access_token;
-        
+        let token = res?.token || res?.Token || res?.accessToken || res?.AccessToken || res?.access_token;
+
         // Check if entire response is the token (string)
         if (!token && typeof res === 'string') {
           token = res;
         }
-        
+
         // Check nested data object
-        if (!token && res.data) {
-          token = res.data.token || res.data.Token || res.data.accessToken;
+        if (!token && res?.data) {
+          token = res.data.token || res.data.Token || res.data.accessToken || res.data.access_token;
         }
-        
+
         console.log('Extracted token:', token);
         console.log('Token type:', typeof token);
-        
-        if (token && token !== 'undefined' && token !== null) {
-          // Explicitly clear old tokens first
-          localStorage.removeItem('authToken');
-          localStorage.removeItem('token');
-          
-          // Store new token
-          const tokenString = String(token);
-          localStorage.setItem('authToken', tokenString);
-          
-          // Verify it was stored
-          const storedToken = localStorage.getItem('authToken');
-          console.log('✅ Token stored in localStorage:', storedToken?.substring(0, 20) + '...');
-          console.log('✅ Verification - Token exists:', !!storedToken);
-          
-          this._isGuest = false;
-          this.isLoggedIn$.next(true);
-        } else {
-          console.warn('⚠️ No valid token found in response.');
-          console.warn('Backend must return a JWT token in the login response!');
-          console.warn('Expected response format: { token: "jwt-string" } or { Token: "jwt-string" }');
-          console.warn('Full response was:', JSON.stringify(res));
-          
-          // Fallback: generate a temporary token from user data
-          const fallbackToken = 'temp_' + btoa(JSON.stringify({email: data.email, timestamp: Date.now()}));
-          localStorage.removeItem('authToken');
-          localStorage.removeItem('token');
-          localStorage.setItem('authToken', fallbackToken);
-          
-          const stored = localStorage.getItem('authToken');
-          console.log('⚠️ Using fallback token:', stored?.substring(0, 20) + '...');
-          console.log('⚠️ Fallback token stored:', !!stored);
-          
-          this._isGuest = false;
-          this.isLoggedIn$.next(true);
+
+        if (!token || token === 'undefined' || token === null || token === '') {
+          console.error('❌ Login response did not include a valid token.');
+          throw new Error('Login failed: missing auth token from server.');
         }
+
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('token');
+        const tokenString = String(token);
+        localStorage.setItem('authToken', tokenString);
+        console.log('✅ Token stored in localStorage:', tokenString.substring(0, 20) + '...');
+
+        this._isGuest = false;
+        this.isLoggedIn$.next(true);
+        return res;
       })
     );
   }
