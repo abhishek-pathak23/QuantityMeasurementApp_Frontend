@@ -13,11 +13,12 @@ export class AuthService {
   constructor(private http: HttpClient, private router: Router) {}
 
   signup(data: { name: string; email: string; password: string; role: string }) {
+    const payload = { ...data, role: this.normalizeRole(data.role) };
     console.log('📝 Signup request:', {
       url: `${this.BASE}/signup`,
-      data: data
+      data: payload
     });
-    return this.http.post(`${this.BASE}/signup`, data).pipe(
+    return this.http.post(`${this.BASE}/signup`, payload).pipe(
       tap(
         res => {
           console.log('✅ Signup success:', res);
@@ -32,6 +33,12 @@ export class AuthService {
         }
       )
     );
+  }
+
+  private normalizeRole(role: string): string {
+    const normalized = role?.trim().toUpperCase();
+    if (normalized === 'ADMIN') return 'ADMIN';
+    return 'USER';
   }
 
   login(data: { email: string; password: string }) {
@@ -69,6 +76,7 @@ export class AuthService {
         localStorage.removeItem('token');
         const tokenString = String(token);
         localStorage.setItem('authToken', tokenString);
+        localStorage.setItem('token', tokenString);
         console.log('✅ Token stored in localStorage:', tokenString.substring(0, 20) + '...');
 
         this._isGuest = false;
