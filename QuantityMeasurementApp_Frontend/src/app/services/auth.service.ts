@@ -36,9 +36,9 @@ export class AuthService {
   }
 
   private normalizeRole(role: string): string {
-    const normalized = role?.trim().toUpperCase();
-    if (normalized === 'ADMIN') return 'ADMIN';
-    return 'USER';
+    const normalized = role?.trim().toLowerCase();
+    if (normalized === 'admin') return 'admin';
+    return 'user';
   }
 
   login(data: { email: string; password: string }) {

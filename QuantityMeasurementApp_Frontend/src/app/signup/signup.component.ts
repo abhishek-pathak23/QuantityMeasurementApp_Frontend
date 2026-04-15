@@ -16,7 +16,7 @@ export class SignupComponent {
   email = '';
   password = '';
   loading = false;
-  role = 'User';
+  role = 'user';
   successMsg = '';
   errorMsg = '';
 
